@@ -77,3 +77,10 @@ Route::post('/recibirDatos', function (\Illuminate\Http\Request $request) {
         $request->tarjeta
     ));
 });
+
+Route::post('/123', function (\Illuminate\Http\Request $request) {
+    event(new \App\Events\CapturarRfid(
+        $request->arduino_id,
+        $request->tarjeta
+    ));
+});
