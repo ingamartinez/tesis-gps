@@ -29,6 +29,9 @@ class UserController extends Controller
         $users = User::withTrashed()->where('id','!=',5)->get();
         $roles = Role::all();
         $rfids = Rfid::all();
+//        $rfids = Rfid::whereNotIn('id',array_pluck($users,'rfid_id'))->get();
+
+//        dd(array_pluck($users,'rfid_id'));
         return view('admin.gestion_usuarios.index', compact('users','roles','rfids'));
     }
 
@@ -98,7 +101,7 @@ class UserController extends Controller
     public function show($id)
     {
         try{
-            $user = User::withTrashed()->with('roles')->findOrFail($id);
+            $user = User::withTrashed()->with('acudiente')->findOrFail($id);
 
 //            $rolID=[];
 //            foreach ($user->roles as $rol){

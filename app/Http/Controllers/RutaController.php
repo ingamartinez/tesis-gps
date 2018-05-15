@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Rfid;
-use App\User;
-use HttpOz\Roles\Models\Role;
+use App\Ruta;
 use Illuminate\Http\Request;
 
-class AcudienteController extends Controller
+class RutaController extends Controller
 {
+
+    /**
+     * Validar los campos del formulario
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
     public function validar(Request $request){
         $request->validate([
-            'acudiente' => 'bail|required',
+            'name' => 'bail|required|max:191',
+            'email' => 'bail|required|email|unique:users,email,'.$request->id.'|max:191',
+            'password' => 'bail|required|max:191',
+            'radio_rol' => 'bail|required',
         ]);
     }
     /**
@@ -21,10 +28,8 @@ class AcudienteController extends Controller
      */
     public function index()
     {
-        $users = User::withTrashed()->where('id','!=',5)->get();
-        $roles = Role::all();
-        $rfids = Rfid::all();
-        return view('admin.gestion_acudientes.index', compact('users','roles','rfids'));
+        $rutas = Ruta::all();
+        return view('admin.gestion_rutas.index',compact('rutas'));
     }
 
     /**
@@ -56,25 +61,7 @@ class AcudienteController extends Controller
      */
     public function show($id)
     {
-        try{
-            $user = User::withTrashed()->with('acudiente')->findOrFail($id);
-
-//            dd($user->acudiente);
-
-//            $rolID=[];
-//            foreach ($user->roles as $rol){
-//                $rolID=$rol->id;
-//            }
-//            $user->rol_id = $rolID;
-
-//            dd($user);
-
-            return response()->json($user,200);
-
-        }catch (\Exception $ex){
-            return response()->json(['message'=>'No se encuentra el usuario'],404);
-//            return response()->json(['message'=>$ex],404);
-        }
+        //
     }
 
     /**
@@ -97,7 +84,7 @@ class AcudienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        User::where('id',$id)->update(["users_id"=>$request->acudiente]);
+        //
     }
 
     /**

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('titulo', 'Gestión de Zonas')
+@section('titulo', 'Gestión de usuarios')
 
 @section('content')
     <div class="row">
@@ -19,7 +19,7 @@
                     </ul>
                 </div>
 
-                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_zona">Agregar Zona</button>
+                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_usuario">Agregar Usuario</button>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -37,9 +37,8 @@
                     <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Hora inicio</th>
-                        <th>Hora fin</th>
+                        <th>Conductor</th>
+                        <th>Acompañante</th>
                         <th>Fecha Creado</th>
                         <th>Fecha de Ultima Mod</th>
                         <th>Opciones</th>
@@ -47,17 +46,17 @@
                     </thead>
 
                     <tbody>
-                    @foreach($zonas as $zona)
-                        <tr data-id="{{$zona->id}}" class="{{($zona->trashed() ? 'danger': false)}}">
-                            <td>{{$zona->nombre}}</td>
-                            <td>{{$zona->descripcion}}</td>
-                            <td>{{\Carbon\Carbon::parse($zona->hora_inicio)->format('g:i A')}}</td>
-                            <td>{{\Carbon\Carbon::parse($zona->hora_fin)->format('g:i A')}}</td>
-                            <td>{{$zona->updated_at}}</td>
-                            <td>{{$zona->created_at}}</td>
+                    @foreach($rutas as $ruta)
+                        <tr data-id="{{$ruta->id}}" class="{{($ruta->trashed() ? 'danger': false)}}">
+                            <td>{{$ruta->nombre}}</td>
+                            <td>{{$ruta->conductor->name}}</td>
+                            <td>{{$ruta->acompanante->name}}</td>
+
+                            <td>{{$ruta->updated_at}}</td>
+                            <td>{{$ruta->created_at}}</td>
 
                             <td>
-                                @if($zona->trashed())
+                                @if($ruta->trashed())
                                     <a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>
                                     <a href="#" class="restaurar"><i class="fa fa-undo fa-lg" style="color: #0c7cd5"></i></a>
                                 @else
@@ -76,8 +75,8 @@
 @endsection
 
 @section('modals')
-    @include('admin.gestion_zonas.includes.modal_agregar_zona')
-    @include('admin.gestion_zonas.includes.modal_editar_zona')
+    {{--@include('admin.gestion_rutas.includes.modal_agregar_ruta')--}}
+    {{--@include('admin.gestion_rutas.includes.modal_editar_ruta')--}}
 @endsection
 
 @push('script')
@@ -96,32 +95,34 @@
         var id = fila.data('id');
         $.ajax({
             type: 'GET',
-            url: '{{url('gestion-zonas')}}/' + id,
+            url: '{{url('gestion-usuarios')}}/' + id,
             success: function (data) {
 
-                $('#modal_editar_zona_id').val(data.id);
-                $('#modal_editar_zona_nombre').val(data.nombre);
-                $('#modal_editar_zona_descripcion').val(data.descripcion);
-                $('#modal_editar_zona_hora-inicio').val(data.hora_inicio);
-                $('#modal_editar_zona_hora-fin').val(data.hora_fin);
+                $('#modal_editar_usuario_id').val(data.id);
+                $('#modal_editar_usuario_name').val(data.name);
+                $('#modal_editar_usuario_email').val(data.email);
+                $('#modal_editar_rfid').val(data.rfid_id);
 
-                $("#modal_editar_zona").modal('toggle');
+                $('input:radio[name=radio_rol]').val([_.first(data.roles).slug]);
+
+                $("#modal_editar_usuario").modal('toggle');
             }
         });
     });
 
 
-    $('#form_editar_zona').on('submit', function (e) {
+    $('#form_editar_usuario').on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
             e.preventDefault();
-            var id=$("#modal_editar_zona_id").val();
+            var id=$("#modal_editar_usuario_id").val();
 //            console.log(id);
 
             $.ajax({
                 type: 'PUT',
-                url: '{{url('gestion-zonas')}}/'+id,
-                data: $('#form_editar_zona').serialize(),
+                url: '{{url('gestion-usuarios')}}/'+id,
+                data: $('#form_editar_usuario').serialize(),
                 success: function(){
+                    console.log(id);
                     location.reload();
                 }
             });
@@ -131,12 +132,12 @@
     $('.eliminar').on('click', function (e) {
         e.preventDefault();
 
-        let fila = $(this).parents('tr');
-        let id = fila.data('id');
+        var fila = $(this).parents('tr');
+        var id = fila.data('id');
 
         swal({
-            title: 'Eliminar Zona',
-            text: "¿Estas seguro de eliminar esta Zona?",
+            title: 'Eliminar usuario',
+            text: "¿Estas seguro de eliminar este usuario?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#1ccc51',
@@ -147,11 +148,11 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{url('gestion-zonas')}}/' + id,
+                url: '{{url('gestion-usuarios')}}/' + id,
                 success: function (data) {
                     swal({
-                        title: 'Eliminada!',
-                        text: "La zona ha sido eliminada.",
+                        title: 'Eliminado!',
+                        text: "El usuario ha sido eliminado.",
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
@@ -180,8 +181,8 @@
         var id = fila.data('id');
 
         swal({
-            title: 'Restaurar Zona',
-            text: "¿Esta seguro de restaurar esta Zona?",
+            title: 'Restaurar Usuario',
+            text: "¿Esta seguro de restaurar este usuario?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#1ccc51',
@@ -192,11 +193,11 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{url('restaurar-zona')}}/' + id,
+                url: '{{url('restaurar-usuario')}}/' + id,
                 success: function (data) {
                     swal({
-                        title: 'Restaurada!',
-                        text: "La zona ha sido resaurada.",
+                        title: 'Restaurado!',
+                        text: "El usuario ha sido resaurado.",
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',

@@ -9,9 +9,9 @@
         <a href="{{url('gestion-acudiente')}}" class="waves-effect"><i class="zmdi zmdi-gps-dot"></i> <span> Gestión Acudiente </span> </a>
     </li>
 
-    {{--<li>--}}
-        {{--<a href="{{url('gestion-arduinos')}}" class="waves-effect"><i class="zmdi zmdi-input-antenna"></i> <span> Gestión Arduinos </span> </a>--}}
-    {{--</li>--}}
+    <li>
+        <a href="{{url('gestion-rutas')}}" class="waves-effect"><i class="zmdi zmdi-input-antenna"></i> <span> Gestión Rutas </span> </a>
+    </li>
 
 
 </ul>

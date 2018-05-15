@@ -23,9 +23,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['role:conductor|super-admin','auth'])->group(function () {
-    Route::get('/', function () {
-        return view('layouts.dashboard');
-    });
+    Route::resource('rutas-conductor','RutaConductorController',['names'=>[
+        'store' => 'ruta.conductor.store',
+        'show' => 'ruta.conductor.show',
+        'update' => 'ruta.conductor.update',
+        'delete' => 'ruta.conductor.delete'
+    ]]);
 });
 
 Route::middleware(['role:admin|super-admin','auth'])->group(function () {
@@ -64,6 +67,15 @@ Route::middleware(['role:admin|super-admin','auth'])->group(function () {
         'delete' => 'zona.delete'
     ]]);
 
+    Route::post('validar-ruta','RutaController@validar')->name('ruta.validar');
+    Route::post('restaurar-ruta/{id}','RutaController@restore')->name('ruta.restore');
+    Route::resource('gestion-rutas','RutaController',['names'=>[
+        'store' => 'ruta.store',
+        'show' => 'ruta.show',
+        'update' => 'ruta.update',
+        'delete' => 'ruta.delete'
+    ]]);
+
 });
 
 Route::resource('monitoreo','MonitoreoController');
@@ -71,9 +83,15 @@ Route::resource('monitoreo','MonitoreoController');
 Route::get('reporte-zona','ReporteController@reporteZona')->name('reporte.zona');
 Route::resource('reporte','ReporteController');
 
-Route::post('/recibirDatos', function (\Illuminate\Http\Request $request) {
+Route::get('/recibirDatos', function (\Illuminate\Http\Request $request) {
     event(new \App\Events\CapturarRfid(
         $request->arduino_id,
         $request->tarjeta
     ));
+});
+
+Route::get('prueba', function (\Illuminate\Http\Request $request) {
+    $user = \App\User::findOrFail(6);
+
+    dd($user->hasRutaActiva());
 });

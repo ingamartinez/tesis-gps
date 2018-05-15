@@ -37,6 +37,8 @@
 
     <script src="{{asset('assets/js/modernizr.min.js')}}"></script>
 
+
+
 </head>
 
 
@@ -51,7 +53,7 @@
         <!-- LOGO -->
         <div class="topbar-left">
             <a href="index.html" class="logo">
-                <img style="padding: 10px" src="http://idi.unisinucartagena.edu.co:8000/cuenta-facil/public/images/LogoUnisinu.png" alt="" class="img-responsive">
+                {{--<img style="padding: 10px" src="http://idi.unisinucartagena.edu.co:8000/cuenta-facil/public/images/LogoUnisinu.png" alt="" class="img-responsive">--}}
             </a>
         </div>
 
@@ -113,6 +115,10 @@
                     @include('menu.user')
                 @endrole
 
+                @role('conductor|super-admin')
+                @include('menu.conductor')
+                @endrole
+
 
                 <div class="clearfix"></div>
             </div>
@@ -137,7 +143,7 @@
             </div> <!-- container -->
         </div> <!-- content -->
         <footer class="footer text-right">
-            Universidad del SINU - Alejandro Martinez
+            Universidad del SINU
         </footer>
 
     </div>
@@ -202,6 +208,12 @@
 <script src="{{asset('assets/js/bootstrap-datepicker.es.min.js')}}"></script>
 
 <script src="{{asset('assets/js/arduino.js')}}"></script>
+
+{{--<script src="//maps.googleapis.com/maps/api/js?libraries=drawing%2Cplaces&#038;key=AIzaSyDo0coYsmPFssj1tiYZLIY7yQur-e8aVIs&#038;ver=3">--}}
+{{--</script>--}}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDo0coYsmPFssj1tiYZLIY7yQur-e8aVIs">
+</script>
 
 @stack('script')
 

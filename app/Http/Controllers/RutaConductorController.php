@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Rfid;
-use App\User;
-use HttpOz\Roles\Models\Role;
+use App\RegistroRuta;
+use App\Ruta;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AcudienteController extends Controller
+class RutaConductorController extends Controller
 {
-    public function validar(Request $request){
-        $request->validate([
-            'acudiente' => 'bail|required',
-        ]);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,10 +16,8 @@ class AcudienteController extends Controller
      */
     public function index()
     {
-        $users = User::withTrashed()->where('id','!=',5)->get();
-        $roles = Role::all();
-        $rfids = Rfid::all();
-        return view('admin.gestion_acudientes.index', compact('users','roles','rfids'));
+        $rutas = Ruta::where('conductor_id','=',auth()->user()->id)->get();
+        return view('conductor.ruta.index',compact('rutas'));
     }
 
     /**
@@ -56,25 +49,7 @@ class AcudienteController extends Controller
      */
     public function show($id)
     {
-        try{
-            $user = User::withTrashed()->with('acudiente')->findOrFail($id);
-
-//            dd($user->acudiente);
-
-//            $rolID=[];
-//            foreach ($user->roles as $rol){
-//                $rolID=$rol->id;
-//            }
-//            $user->rol_id = $rolID;
-
-//            dd($user);
-
-            return response()->json($user,200);
-
-        }catch (\Exception $ex){
-            return response()->json(['message'=>'No se encuentra el usuario'],404);
-//            return response()->json(['message'=>$ex],404);
-        }
+        //
     }
 
     /**
@@ -97,7 +72,17 @@ class AcudienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        User::where('id',$id)->update(["users_id"=>$request->acudiente]);
+        $registroRuta = new RegistroRuta();
+
+        $registroRuta->rutas_id= $id;
+        $registroRuta->lugar_inicio=null;
+        $registroRuta->fecha_inicio=Carbon::now();
+        $registroRuta->estado=1;
+
+        $registroRuta->save();
+
+        return response()->json(['mensaje'=>'Ruta iniciada'],200);
+
     }
 
     /**

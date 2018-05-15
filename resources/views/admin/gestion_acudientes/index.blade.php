@@ -19,8 +19,6 @@
                     </ul>
                 </div>
 
-                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_usuario">Agregar Usuario</button>
-
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -40,6 +38,7 @@
                         <th>Email</th>
                         <th>Roles</th>
                         <th>Rfid</th>
+                        <th>Acudiente</th>
                         <th>Fecha Creado</th>
                         <th>Fecha de Ultima Mod</th>
                         <th>Opciones</th>
@@ -58,17 +57,12 @@
                                     @endforeach
                                 </td>
                                 <td>{{$user->rfid ? $user->rfid->serial : ''}}</td>
+                                <td>{{isset($user->acudiente->name) ? $user->acudiente->name : 'NO'}}</td>
                                 <td>{{$user->updated_at}}</td>
                                 <td>{{$user->created_at}}</td>
 
                                 <td>
-                                    @if($user->trashed())
-                                        <a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>
-                                        <a href="#" class="restaurar"><i class="fa fa-undo fa-lg" style="color: #0c7cd5"></i></a>
-                                    @elseif(!($user->id == auth()->user()->id))
-                                        <a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>
-                                        <a href="#" class="eliminar"><i class="fa fa-trash-o fa-lg" style="color: #ff5b5b"></i></a>
-                                    @endif
+                                    <a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>
                                 </td>
                             </tr>
                         @endif
@@ -83,8 +77,7 @@
 @endsection
 
 @section('modals')
-    @include('admin.gestion_usuarios.includes.modal_agregar_usuario')
-    @include('admin.gestion_usuarios.includes.modal_editar_usuario')
+    @include('admin.gestion_acudientes.includes.modal_asignar_acudiente')
 @endsection
 
 @push('script')
@@ -103,7 +96,7 @@
         var id = fila.data('id');
         $.ajax({
             type: 'GET',
-            url: '{{url('gestion-usuarios')}}/' + id,
+            url: '{{url('gestion-acudiente')}}/' + id,
             success: function (data) {
 
                 $('#modal_editar_usuario_id').val(data.id);
@@ -111,7 +104,13 @@
                 $('#modal_editar_usuario_email').val(data.email);
                 $('#modal_editar_rfid').val(data.rfid_id);
 
-                $('input:radio[name=radio_rol]').val([_.first(data.roles).slug]);
+                if (_.isNull(data.acudiente)){
+                    $('select[name=acudiente]').val("");
+
+                }else{
+                    $('select[name=acudiente]').val(data.acudiente.id);
+                }
+
 
                 $("#modal_editar_usuario").modal('toggle');
             }
@@ -127,105 +126,16 @@
 
             $.ajax({
                 type: 'PUT',
-                url: '{{url('gestion-usuarios')}}/'+id,
+                url: '{{url('gestion-acudiente')}}/'+id,
                 data: $('#form_editar_usuario').serialize(),
                 success: function(){
-                    console.log(id);
+                    // console.log(id);
                     location.reload();
                 }
             });
         }
     });
 
-    $('.eliminar').on('click', function (e) {
-        e.preventDefault();
-
-        var fila = $(this).parents('tr');
-        var id = fila.data('id');
-
-        swal({
-            title: 'Eliminar usuario',
-            text: "¿Estas seguro de eliminar este usuario?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#1ccc51',
-            confirmButtonText: 'Si'
-        }).then(function () {
-            $.ajax({
-                type: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '{{url('gestion-usuarios')}}/' + id,
-                success: function (data) {
-                    swal({
-                        title: 'Eliminado!',
-                        text: "El usuario ha sido eliminado.",
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok'
-                    }).then(function () {
-                        location.reload();
-                    });
-                },
-                error:function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR.responseText);
-                    swal(
-                        'Ha ocurrido un error',
-                        jqXHR.responseText,
-                        'error'
-                    );
-
-                }
-            });
-        });
-    });
-
-    $('.restaurar').on('click', function (e) {
-        e.preventDefault();
-
-        var fila = $(this).parents('tr');
-        var id = fila.data('id');
-
-        swal({
-            title: 'Restaurar Usuario',
-            text: "¿Esta seguro de restaurar este usuario?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#1ccc51',
-            confirmButtonText: 'Si'
-        }).then(function () {
-            $.ajax({
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '{{url('restaurar-usuario')}}/' + id,
-                success: function (data) {
-                    swal({
-                        title: 'Restaurado!',
-                        text: "El usuario ha sido resaurado.",
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok'
-                    }).then(function () {
-                        location.reload();
-                    });
-                },
-                error:function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR.responseText);
-                    swal(
-                        'Ha ocurrido un error',
-                        jqXHR.responseText,
-                        'error'
-                    );
-
-                }
-            });
-        });
-    });
 
 </script>
 @endpush

@@ -57,5 +57,31 @@ class User extends Authenticatable implements HasRoleContract
         return $this->belongsTo('App\User','users_id');
     }
 
+    public function rutas()
+    {
+        return $this->hasmany('App\Ruta','conductor_id');
+    }
+
+    public function hasRutaActiva(){
+        $existe = \DB::table('rutas')->
+            join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
+            ->select('registro_rutas.estado')
+            ->where('rutas.conductor_id','=',$this->id)
+            ->where('registro_rutas.estado','=',1)
+            ->exists();
+        return $existe;
+    }
+
+    public function nombreRutaActiva(){
+        $nombre_ruta = \DB::table('rutas')->
+        join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
+            ->select('rutas.nombre')
+            ->where('rutas.conductor_id','=',$this->id)
+            ->where('registro_rutas.estado','=',1)
+            ->first()->nombre;
+
+        return $nombre_ruta;
+    }
+
 
 }
