@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-05-15 14:43:49
+Date: 2018-05-17 16:06:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -70,11 +70,17 @@ CREATE TABLE `registro_estudiantes` (
   KEY `fk_registros_registro_rutas1_idx` (`registro_rutas_id`),
   CONSTRAINT `fk_registro_users1` FOREIGN KEY (`estudiante_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_registros_registro_rutas1` FOREIGN KEY (`registro_rutas_id`) REFERENCES `registro_rutas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of registro_estudiantes
 -- ----------------------------
+INSERT INTO `registro_estudiantes` VALUES ('7', '8', '2', null, null, null, null, '0', '2018-05-17 15:31:44', '2018-05-17 15:31:48', null);
+INSERT INTO `registro_estudiantes` VALUES ('8', '4', '2', null, null, null, null, '0', '2018-05-17 15:31:55', '2018-05-17 15:55:40', null);
+INSERT INTO `registro_estudiantes` VALUES ('9', '4', '3', null, null, null, null, '0', '2018-05-17 15:58:23', '2018-05-17 15:58:38', null);
+INSERT INTO `registro_estudiantes` VALUES ('10', '8', '3', null, null, null, null, '0', '2018-05-17 15:58:32', '2018-05-17 15:58:35', null);
+INSERT INTO `registro_estudiantes` VALUES ('11', '4', '4', null, null, null, null, '0', '2018-05-17 16:04:05', '2018-05-17 16:04:15', null);
+INSERT INTO `registro_estudiantes` VALUES ('12', '8', '4', null, null, null, null, '0', '2018-05-17 16:04:10', '2018-05-17 16:04:19', null);
 
 -- ----------------------------
 -- Table structure for registro_rutas
@@ -94,12 +100,14 @@ CREATE TABLE `registro_rutas` (
   PRIMARY KEY (`id`),
   KEY `fk_registro_rutas_rutas1_idx` (`rutas_id`),
   CONSTRAINT `fk_registro_rutas_rutas1` FOREIGN KEY (`rutas_id`) REFERENCES `rutas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of registro_rutas
 -- ----------------------------
-INSERT INTO `registro_rutas` VALUES ('2', '1', null, null, '2018-05-13 22:04:34', null, '1', '2018-05-13 22:04:34', '2018-05-13 22:04:34', null);
+INSERT INTO `registro_rutas` VALUES ('2', '1', null, null, '2018-05-13 22:04:34', null, '0', '2018-05-13 22:04:34', '2018-05-17 15:53:21', null);
+INSERT INTO `registro_rutas` VALUES ('3', '1', null, null, '2018-05-17 15:54:00', null, '0', '2018-05-17 15:54:00', '2018-05-17 15:58:43', null);
+INSERT INTO `registro_rutas` VALUES ('4', '1', null, null, '2018-05-17 16:03:16', null, '0', '2018-05-17 16:03:16', '2018-05-17 16:04:28', null);
 
 -- ----------------------------
 -- Table structure for rfid
@@ -247,8 +255,8 @@ CREATE TABLE `users` (
 -- ----------------------------
 INSERT INTO `users` VALUES ('1', 'Alejandro Martinezz', 'ale@ale.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', 'NGR9upXTqMzsolrU4oBLQJB9Ta5uyKE9GLvVjqOKo4p7cdMuAeTDzQs1tnrK', '2017-09-11 00:12:13', '2017-10-21 01:02:26', null, null, '1');
 INSERT INTO `users` VALUES ('4', 'Edwin Chapuel', 'ed.ch@gmail.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', 'PKWRpbQLRGz9f71c64ozNJiDAlGeibd7IZOMWuXpHlFFWUA2BP9jE3aztdy2', '2017-09-24 12:47:32', '2018-05-13 16:28:35', null, '9', '2');
-INSERT INTO `users` VALUES ('5', 'Super Admin', 'admin@admin.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', '3OMqkw4CtiBBH3oMs7MFxVkYKV7dETpjgoOYXHyBwXsmEXcDY81AMi55vqUl', null, null, null, null, null);
-INSERT INTO `users` VALUES ('6', 'Jose Torres', 'jose.torres@gmail.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', 'NhBxkiPL50OP8ozBW3PaSHDwGlj9UDBvM0Tnjkx1hQVj8GdB1oXIIY1sTaZm', '2018-04-26 10:43:46', '2018-04-26 10:43:46', null, null, '3');
+INSERT INTO `users` VALUES ('5', 'Super Admin', 'admin@admin.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', 'KZfa9VAcZoZrXp11oAiaIPAntLUIHNd92WKVdpzOW79RKHve4L7MxOWO2a5O', null, null, null, null, null);
+INSERT INTO `users` VALUES ('6', 'Jose Torres', 'jose.torres@gmail.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', 'UKpRBn215YlbwcO5OQIjG7TtZ02PooLoyi1GUQO3U7XYANfweasUx6LQq1ya', '2018-04-26 10:43:46', '2018-04-26 10:43:46', null, null, '3');
 INSERT INTO `users` VALUES ('7', 'Harold', 'harold@harold.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', null, '2018-05-13 14:59:41', '2018-05-13 14:59:41', null, null, '4');
 INSERT INTO `users` VALUES ('8', 'Estudiante2', 'est2@est2.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', null, '2018-05-13 15:00:20', '2018-05-13 16:28:11', null, '7', '5');
 INSERT INTO `users` VALUES ('9', 'Familiar 2', 'fam2@fam2.com', '602bdc204140db016bee5374895e5568ce422fabe17e064061d80097', null, '2018-05-13 15:10:32', '2018-05-13 15:10:32', null, null, '6');

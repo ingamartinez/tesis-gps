@@ -116,28 +116,13 @@ $(document).ready(function () {
         map: map
     });
 
-    // if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(showPosition);
-    // } else {
-    //     alert("Geolocation is not supported by this browser.");
-    // }
-
     wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
 });
 
-// function showPosition(position) {
-//     alert(position.coords.latitude,position.coords.longitude);
-// }
+Echo.channel('rfid').listen('CapturarRfid', function (e) {
+    populateTable();
 
-
-Echo.channel('rfid')
-// .listen('MostrarRfid', (e) => {
-//     console.log(e);
-//
-// })
-.listen('CapturarRfid', function (e) {
     console.log(e);
-    toastr.success('El ID de la tarjeta es ' + e.tarjeta, 'Tarjeta');
 });
 
 function do_something(lat, long) {

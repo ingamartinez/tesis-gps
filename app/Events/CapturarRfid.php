@@ -14,18 +14,20 @@ class CapturarRfid implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $id_arduino;
-    public $tarjeta;
+    public $registro_ruta_id;
+    public $ruta_id;
+    public $user_id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($id_arduino, $tarjeta)
+    public function __construct($registro_ruta_id, $ruta_id,$user_id)
     {
-        $this->id_arduino = $id_arduino;
-        $this->tarjeta = $tarjeta;
+        $this->$registro_ruta_id = $registro_ruta_id;
+        $this->$ruta_id = $ruta_id;
+        $this->$user_id = $user_id;
     }
 
     /**

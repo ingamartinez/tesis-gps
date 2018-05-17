@@ -33,10 +33,36 @@
 
                 @if(auth()->user()->hasRutaActiva())
 
-                    <h3>Ruta Activa <b>{{auth()->user()->nombreRutaActiva()}}</b></h3>
-                    <div id="map" style=" height:480px;width:100%;position: relative; overflow: hidden; background-color: rgb(229, 227, 223);">
+
+
+
+                    <div class="col-xs-12 col-md-8">
+                        <h3>Ruta Activa <b>{{auth()->user()->rutaActiva()->nombre}}</b></h3>
+                        <button type="button" id="finalizar_ruta" value="{{auth()->user()->rutaActiva()->registro_rutas_id}}" class="btn btn-info waves-effect waves-light">Finalizar Ruta</button>
+                        <hr>
+                        <div class="form-group">
+                            <div id="map" style=" height:480px;width:100%;position: relative; overflow: hidden; background-color: rgb(229, 227, 223);"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <h3>Estudiantes activos</h3>
+
+                        <table id="estudiantes" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
 
                     </div>
+
+
                 @else
                     <h3>Mis rutas</h3>
 
@@ -87,8 +113,44 @@
                 }
             });
 
+            populateTable();
 
         });
+
+        function populateTable() {
+            $.ajax({
+                type: 'GET',
+                url: '{{url('estudiantes-ruta')}}',
+                success: function (data) {
+
+                    let table = $('#estudiantes > tbody');
+                    table.empty();
+                    _.each(data,function (item) {
+
+                        if (item.estado_ruta) {
+                            item.estado_ruta="En ruta";
+
+                            table.append
+                            ("<tr class='success'>" +
+                                "<td>"+item.users_name+"</td>" +
+                                "<td>"+item.estado_ruta+"</td>" +
+                            "</tr>");
+
+                        }else{
+                            item.estado_ruta="Fuera de Ruta";
+
+                            table.append
+                            ("<tr class='danger'>" +
+                                "<td>"+item.users_name+"</td>" +
+                                "<td>"+item.estado_ruta+"</td>" +
+                            "</tr>");
+
+                        }
+
+                    });
+                }
+            });
+        }
 
         $('#iniciar_ruta').on('click', function (e) {
             e.preventDefault();
@@ -112,6 +174,51 @@
                     success: function (data) {
                         swal({
                             title: 'Ruta Iniciada',
+                            text: data.message,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then(function () {
+                            location.reload();
+                        });
+                    },
+                    error:function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.responseText);
+                        swal(
+                            'Ha ocurrido un error',
+                            jqXHR.responseText,
+                            // errorThrown,
+                            'error'
+                        );
+
+                    }
+                });
+            });
+        });
+
+        $('#finalizar_ruta').on('click', function (e) {
+            e.preventDefault();
+
+            let id = $(this).val();
+
+            swal({
+                title: 'Finalizar Ruta',
+                text: "¿Desea finalizar la Ruta?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1ccc51',
+                confirmButtonText: 'Si'
+            }).then(function () {
+                $.ajax({
+                    type: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '{{url('finalizar-ruta')}}/' + id,
+                    success: function (data) {
+                        swal({
+                            title: 'Ruta Finalizada',
                             text: data.message,
                             type: 'success',
                             showCancelButton: false,

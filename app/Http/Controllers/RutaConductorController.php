@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\RegistroEstudiante;
 use App\RegistroRuta;
 use App\Ruta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class RutaConductorController extends Controller
 {
@@ -18,6 +20,24 @@ class RutaConductorController extends Controller
     {
         $rutas = Ruta::where('conductor_id','=',auth()->user()->id)->get();
         return view('conductor.ruta.index',compact('rutas'));
+    }
+
+    public function estudiantesEnRuta()
+    {
+//        $rutas = Ruta::where('conductor_id','=',auth()->user()->id)->get();
+
+        $estudiantes = DB::table('rutas')
+            ->join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
+            ->join('registro_estudiantes AS re',"re.registro_rutas_id",'registro_rutas.id')
+            ->join('users',"re.estudiante_id",'users.id')
+            ->select('rutas.nombre AS ruta','users.id AS users_id','users.name AS users_name','re.estado AS estado_ruta')
+            ->where('rutas.conductor_id','=',auth()->user()->id)
+            ->where('registro_rutas.estado','=',1)
+        ->get();
+
+
+
+        return response()->json($estudiantes,200);
     }
 
     /**
@@ -81,7 +101,26 @@ class RutaConductorController extends Controller
 
         $registroRuta->save();
 
-        return response()->json(['mensaje'=>'Ruta iniciada'],200);
+        return response()->json(['message'=>'Ruta iniciada'],200);
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function finalizarRuta(Request $request, $id)
+    {
+        $registroRuta = RegistroRuta::findOrFail($id);
+
+        $registroRuta->estado=0;
+
+        $registroRuta->save();
+
+        return response()->json(['message'=>'Ruta Finalizada'],200);
 
     }
 

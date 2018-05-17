@@ -72,13 +72,14 @@ class User extends Authenticatable implements HasRoleContract
         return $existe;
     }
 
-    public function nombreRutaActiva(){
+    public function rutaActiva(){
         $nombre_ruta = \DB::table('rutas')->
         join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
-            ->select('rutas.nombre')
+            ->select('registro_rutas.id AS registro_rutas_id','rutas.nombre')
             ->where('rutas.conductor_id','=',$this->id)
             ->where('registro_rutas.estado','=',1)
-            ->first()->nombre;
+            ->first();
+
 
         return $nombre_ruta;
     }

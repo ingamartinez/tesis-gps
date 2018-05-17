@@ -23,6 +23,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['role:conductor|super-admin','auth'])->group(function () {
+    Route::get('estudiantes-ruta','RutaConductorController@estudiantesEnRuta')->name('ruta.estudiantes');
+    Route::put('finalizar-ruta/{id}','RutaConductorController@finalizarRuta')->name('ruta.finalizar');
     Route::resource('rutas-conductor','RutaConductorController',['names'=>[
         'store' => 'ruta.conductor.store',
         'show' => 'ruta.conductor.show',
@@ -83,10 +85,31 @@ Route::resource('monitoreo','MonitoreoController');
 Route::get('reporte-zona','ReporteController@reporteZona')->name('reporte.zona');
 Route::resource('reporte','ReporteController');
 
-Route::get('/recibirDatos', function (\Illuminate\Http\Request $request) {
+Route::get('recibirDatos', function (\Illuminate\Http\Request $request) {
+    $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta_id)->where('estado','=',1)->first();
+
+//    dd($registro_ruta);
+
+    $regis=(new App\RegistroEstudiante())->where('estudiante_id','=',$request->user_id)->where('registro_rutas_id','=',$registro_ruta->id)->first();
+
+    if($regis===null){
+        $regis = new \App\RegistroEstudiante();
+        $regis->registro_rutas_id=$registro_ruta->id;
+        $regis->estudiante_id=$request->user_id;
+        $regis->estado=1;
+        $regis->save();
+    }else{
+        $regis->toggleState()->save();
+    }
+
+//    dd($regis);
+
+
+
     event(new \App\Events\CapturarRfid(
-        $request->arduino_id,
-        $request->tarjeta
+        $registro_ruta->id,
+        $request->ruta_id,
+        $request->user_id
     ));
 });
 
