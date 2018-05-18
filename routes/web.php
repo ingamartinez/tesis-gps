@@ -85,17 +85,17 @@ Route::resource('monitoreo','MonitoreoController');
 Route::get('reporte-zona','ReporteController@reporteZona')->name('reporte.zona');
 Route::resource('reporte','ReporteController');
 
-Route::get('recibirDatos', function (\Illuminate\Http\Request $request) {
-    $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta_id)->where('estado','=',1)->first();
+Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
+    $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta)->where('estado','=',1)->first();
 
-//    dd($registro_ruta);
+    $estudiante = (new \App\User())->where('tarjeta','=',$request->tarjeta)->first();
 
-    $regis=(new App\RegistroEstudiante())->where('estudiante_id','=',$request->user_id)->where('registro_rutas_id','=',$registro_ruta->id)->first();
+    $regis=(new App\RegistroEstudiante())->where('estudiante_id','=',$estudiante->id)->where('registro_rutas_id','=',$registro_ruta->id)->first();
 
     if($regis===null){
         $regis = new \App\RegistroEstudiante();
         $regis->registro_rutas_id=$registro_ruta->id;
-        $regis->estudiante_id=$request->user_id;
+        $regis->estudiante_id=$estudiante->id;
         $regis->estado=1;
         $regis->save();
     }else{
