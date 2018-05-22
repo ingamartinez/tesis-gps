@@ -101,7 +101,7 @@ class UserController extends Controller
     public function show($id)
     {
         try{
-            $user = User::withTrashed()->with('acudiente')->findOrFail($id);
+            $user = User::withTrashed()->with('acudiente','roles')->findOrFail($id);
 
 //            $rolID=[];
 //            foreach ($user->roles as $rol){
