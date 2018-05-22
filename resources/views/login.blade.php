@@ -36,7 +36,7 @@
 <div class="clearfix"></div>
 <div class="wrapper-page">
     <div class="text-center">
-        <a href="index.html" class="logo"><span>Sensor<span>App</span></span></a>
+        <a href="{{url('/')}}" class="logo" style="background:rgba(255,255,255,0.6); border-radius: 10px"><span>GPS<span> Rutas</span></span></a>
         
     </div>
     <div class="m-t-40 card-box">

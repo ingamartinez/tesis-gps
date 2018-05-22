@@ -10,7 +10,7 @@
 
     <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}">
 
-    <title>@yield('titulo') - Sensor App</title>
+    <title>@yield('titulo') - GPS Rutas</title>
 
     <!-- App css -->
     <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
