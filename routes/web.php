@@ -87,10 +87,14 @@ Route::resource('reporte','ReporteController');
 
 Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
     $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta)->where('estado','=',1)->first();
+	
+	$rfid= \App\Rfid::where('serial','=',$request->tarjeta)->first();
 
-    $estudiante = (new \App\User())->where('tarjeta','=',$request->tarjeta)->first();
+    $estudiante = (new \App\User())->where('rfid_id','=',$rfid->id)->first();
 
     $regis=(new App\RegistroEstudiante())->where('estudiante_id','=',$estudiante->id)->where('registro_rutas_id','=',$registro_ruta->id)->first();
+	
+//	dd($registro_ruta, $rfid, $estudiante, $regis);
 
     if($regis===null){
         $regis = new \App\RegistroEstudiante();
@@ -102,15 +106,15 @@ Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
         $regis->toggleState()->save();
     }
 
-//    dd($regis);
-
-
+    //dd($regis);
 
     event(new \App\Events\CapturarRfid(
         $registro_ruta->id,
-        $request->ruta_id,
-        $request->user_id
+        $request->ruta,
+        $estudiante->id
     ));
+	
+	 return "Ok";
 });
 
 Route::get('prueba', function (\Illuminate\Http\Request $request) {

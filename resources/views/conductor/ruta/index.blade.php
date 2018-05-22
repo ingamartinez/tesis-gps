@@ -123,7 +123,7 @@
                 url: '{{url('estudiantes-ruta')}}',
                 success: function (data) {
 
-                    let table = $('#estudiantes > tbody');
+                    var table = $('#estudiantes > tbody');
                     table.empty();
                     _.each(data,function (item) {
 
@@ -155,7 +155,7 @@
         $('#iniciar_ruta').on('click', function (e) {
             e.preventDefault();
 
-            let id = $('select[name=ruta]').val();
+            var id = $('select[name=ruta]').val();
 
             swal({
                 title: 'Iniciar Ruta',
@@ -200,7 +200,7 @@
         $('#finalizar_ruta').on('click', function (e) {
             e.preventDefault();
 
-            let id = $(this).val();
+            var id = $(this).val();
 
             swal({
                 title: 'Finalizar Ruta',
