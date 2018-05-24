@@ -111,15 +111,15 @@
                     @include('menu.admin')
                 @endrole
 
-                @role('user|super-admin')
+                @role('user')
                     @include('menu.user')
                 @endrole
 
-                @role('conductor|super-admin')
+                @role('conductor')
                 @include('menu.conductor')
                 @endrole
 
-                @role('familiar|super-admin')
+                @role('familiar')
                 @include('menu.familiar')
                 @endrole
 
