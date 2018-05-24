@@ -47,7 +47,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="rfid" class="control-label">Rfid</label>
-                                <select id="rfid" name="rfid" class="form-control" data-remote="{{route('usuario.validar')}}" data-remote-method="POST">
+                                <select id="rfid" name="rfid" class="form-control" style="width: 100%" data-remote="{{route('usuario.validar')}}" data-remote-method="POST">
                                     <option value="">Escoge un RFID</option>
                                     @foreach($rfids->whereNotIn('id',array_pluck($users,'rfid_id')) as $rfid)
                                         <option value="{{$rfid->id}}" >{{$rfid->serial}}</option>
@@ -86,15 +86,13 @@
 @push('script')
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#rfid').select2({
+                placeholder: 'Buscar Rfid...',
+                theme:'bootstrap',
+                dropdownParent: $('#modal_agregar_usuario')
+            });
             $('#form_agregar_usuario').validator();
-
-//            $('#form_agregar_usuario').on('submit',function (e) {
-//                e.preventDefault();
-//                $('#password').val(sha3_224($('#password').val()));
-//                this.submit();
-//            })
 
         });
     </script>
-
 @endpush

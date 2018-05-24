@@ -37,6 +37,9 @@
 
     <script src="{{asset('assets/js/modernizr.min.js')}}"></script>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
+
 
 
 </head>
@@ -210,6 +213,7 @@
 <script src="{{asset('assets/js/jquery.timepicker.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap-datepicker.es.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
 
 
 

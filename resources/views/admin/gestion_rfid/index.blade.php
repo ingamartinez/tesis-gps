@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('titulo', 'Gestión de Arduinos')
+@section('titulo', 'Gestión de Rfid')
 
 @section('content')
     <div class="row">
@@ -19,7 +19,7 @@
                     </ul>
                 </div>
 
-                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_arduino">Agregar Arduino</button>
+                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_rfid">Agregar Rfid</button>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -36,33 +36,29 @@
                 <table id="datatable" class="table table-striped table-bordered">
                     <thead>
                     <tr>
-                        <th>Mac</th>
-                        <th>Zona</th>
-                        <th>Fecha Creado</th>
-                        <th>Fecha de Ultima Mod</th>
+                        <th>Serial</th>
+                        <th>Usuario Asignado</th>
                         <th>Opciones</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    @foreach($arduinos as $arduino)
-                        <tr data-id="{{$arduino->id}}" class="{{($arduino->trashed() ? 'danger': false)}}">
-                            <td>{{$arduino->mac}}</td>
-                            <td>{{$arduino->zona->nombre}}</td>
-                            <td>{{$arduino->updated_at}}</td>
-                            <td>{{$arduino->created_at}}</td>
+                    @foreach($rfids as $rfid)
+                        <tr data-id="{{$rfid->id}}" class="{{($rfid->trashed() ? 'danger': false)}}">
+                            <td>{{$rfid->serial}}</td>
+                            <td>{{($rfid->user===null)?"No ha sido asingado":$rfid->user->name}}</td>
 
                             <td>
-                                @if($arduino->trashed())
+                                @if($rfid->trashed())
+                                    {{--<a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>--}}
                                     <a href="#" class="restaurar"><i class="fa fa-undo fa-lg" style="color: #0c7cd5"></i></a>
                                 @else
-                                    <a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>
+                                    {{--<a href="#" class="editar"><i class="fa fa-pencil fa-lg" style="color: #10c469"></i></a>--}}
                                     <a href="#" class="eliminar"><i class="fa fa-trash-o fa-lg" style="color: #ff5b5b"></i></a>
                                 @endif
                             </td>
                         </tr>
                     @endforeach
-
                     </tbody>
                 </table>
             </div>
@@ -71,8 +67,8 @@
 @endsection
 
 @section('modals')
-    @include('admin.gestion_arduinos.includes.modal_agregar_arduino')
-    @include('admin.gestion_arduinos.includes.modal_editar_arduino')
+    @include('admin.gestion_rfid.includes.modal_agregar_rfid')
+    {{--@include('admin.gestion_rfid.includes.modal_editar_rfid')--}}
 @endsection
 
 @push('script')
@@ -85,43 +81,6 @@
         });
     });
 
-    $('.editar').on('click', function (e) {
-        e.preventDefault();
-        var fila = $(this).parents('tr');
-        var id = fila.data('id');
-        $.ajax({
-            type: 'GET',
-            url: '{{url('gestion-arduinos')}}/' + id,
-            success: function (data) {
-
-                $('#modal_editar_arduino_id').val(data.id);
-                $('#modal_editar_arduino_id_arduino').val(data.mac);
-                $('#modal_editar_arduino_zona').val(data.zonas_id);
-
-                $("#modal_editar_arduino").modal('toggle');
-            }
-        });
-    });
-
-
-    $('#form_editar_arduino').on('submit', function (e) {
-        if (!e.isDefaultPrevented()) {
-            e.preventDefault();
-            var id=$("#modal_editar_arduino_id").val();
-//            console.log(id);
-
-            $.ajax({
-                type: 'PUT',
-                url: '{{url('gestion-arduinos')}}/'+id,
-                data: $('#form_editar_arduino').serialize(),
-                success: function(){
-                    console.log(id);
-                    location.reload();
-                }
-            });
-        }
-    });
-
     $('.eliminar').on('click', function (e) {
         e.preventDefault();
 
@@ -129,8 +88,8 @@
         var id = fila.data('id');
 
         swal({
-            title: 'Eliminar arduino',
-            text: "¿Estas seguro de eliminar este arduino?",
+            title: 'Eliminar usuario',
+            text: "¿Estas seguro de eliminar este usuario?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#1ccc51',
@@ -141,11 +100,11 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{url('gestion-arduinos')}}/' + id,
+                url: '{{url('gestion-rfid')}}/' + id,
                 success: function (data) {
                     swal({
                         title: 'Eliminado!',
-                        text: "El arduino ha sido eliminado.",
+                        text: data,
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
@@ -174,8 +133,8 @@
         var id = fila.data('id');
 
         swal({
-            title: 'Restaurar arduino',
-            text: "¿Esta seguro de restaurar este arduino?",
+            title: 'Restaurar Usuario',
+            text: "¿Esta seguro de restaurar este usuario?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#1ccc51',
@@ -186,11 +145,11 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{url('restaurar-arduino')}}/' + id,
+                url: '{{url('restaurar-rfid')}}/' + id,
                 success: function (data) {
                     swal({
                         title: 'Restaurado!',
-                        text: "El arduino ha sido resaurado.",
+                        text: data,
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',

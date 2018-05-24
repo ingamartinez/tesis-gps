@@ -51,6 +51,14 @@ Route::middleware(['role:admin|super-admin','auth'])->group(function () {
         'update' => 'acudiente.update',
     ]]);
 
+    Route::post('validar-rfid','RfidController@validar')->name('rfid.validar');
+    Route::post('restaurar-rfid/{id}','RfidController@restore')->name('rfid.restore');
+    Route::resource('gestion-rfid','RfidController',['names'=>[
+        'store' => 'rfid.store',
+        'show' => 'rfid.show',
+        'update' => 'rfid.update',
+        'delete' => 'rfid.delete'
+    ]]);
 
     Route::post('validar-usuario','UserController@validar')->name('usuario.validar');
     Route::post('restaurar-usuario/{id}','UserController@restore')->name('usuario.restore');

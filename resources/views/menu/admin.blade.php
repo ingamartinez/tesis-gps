@@ -13,5 +13,8 @@
         <a href="{{url('gestion-rutas')}}" class="waves-effect"><i class="zmdi zmdi-input-antenna"></i> <span> Gestión Rutas </span> </a>
     </li>
 
+    <li>
+        <a href="{{url('gestion-rfid')}}" class="waves-effect"><i class="zmdi zmdi-balance"></i> <span> Gestión Rfid </span> </a>
+    </li>
 
 </ul>

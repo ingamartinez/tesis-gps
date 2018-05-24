@@ -106,7 +106,7 @@
                 $('#modal_editar_usuario_id').val(data.id);
                 $('#modal_editar_usuario_name').val(data.name);
                 $('#modal_editar_usuario_email').val(data.email);
-                $('#modal_editar_rfid').val(data.rfid_id);
+                $('#modal_editar_rfid').val(data.rfid_id).trigger('change.select2');;
 
                 $('input:radio[name=radio_rol]').val([_.first(data.roles).slug]);
 

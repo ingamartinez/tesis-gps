@@ -1,4 +1,4 @@
-<div id="modal_editar_usuario" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="modal_editar_rfid" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -33,11 +33,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="modal_editar_modal_editarrfid" class="control-label">Rfid</label>
-                                <select id="modal_editar_rfid" name="rfid" style="width: 100%" class="form-control" data-remote="{{route('usuario.validar')}}" data-remote-method="POST">
+                                <select id="modal_editar_rfid" name="rfid" class="form-control" data-remote="{{route('usuario.validar')}}" data-remote-method="POST">
                                     <option value="">Escoge un RFID</option>
-                                    @foreach($rfids as $rfid)
-                                        <option value="{{$rfid->id}}" >{{$rfid->serial}}</option>
-                                    @endforeach
+                                    {{--@foreach($rfids as $rfid)--}}
+                                        {{--<option value="{{$rfid->id}}" >{{$rfid->serial}}</option>--}}
+                                    {{--@endforeach--}}
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -47,14 +47,14 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="control-label">Escoja un Rol</label>
-                                @foreach($roles as $rol)
-                                    <div class="radio radio-success">
-                                        <input type="radio" name="radio_rol" id="modal_editar_usuario_radio_{{$rol->slug}}" value="{{$rol->slug}}" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
-                                        <label for="modal_editar_usuario_radio_{{$rol->slug}}">
-                                            {{$rol->name}}
-                                        </label>
-                                    </div>
-                                @endforeach
+                                {{--@foreach($roles as $rol)--}}
+                                    {{--<div class="radio radio-success">--}}
+                                        {{--<input type="radio" name="radio_rol" id="modal_editar_usuario_radio_{{$rol->slug}}" value="{{$rol->slug}}" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>--}}
+                                        {{--<label for="modal_editar_usuario_radio_{{$rol->slug}}">--}}
+                                            {{--{{$rol->name}}--}}
+                                        {{--</label>--}}
+                                    {{--</div>--}}
+                                {{--@endforeach--}}
 
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -73,12 +73,6 @@
 @push('script')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#modal_editar_rfid').select2({
-                placeholder: 'Buscar Rfid...',
-                theme:'bootstrap',
-                dropdownParent: $('#modal_editar_usuario')
-            });
-
             $('#form_editar_usuario').validator();
         });
     </script>

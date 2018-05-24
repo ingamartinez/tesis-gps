@@ -44,7 +44,7 @@ class User extends Authenticatable implements HasRoleContract
 
     public function rfid()
     {
-        return $this->belongsTo('App\Rfid');
+        return $this->belongsTo('App\Rfid','rfid_id');
     }
 
     public function estduiante()
