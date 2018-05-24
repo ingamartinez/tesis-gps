@@ -106,16 +106,75 @@
 
 @push('script')
     <script>
+        let map;
+        let wpid;
+        let marker;
+        let geo_options = {
+            enableHighAccuracy: true,
+            maximumAge        : 30000,
+            timeout           : 27000
+        };
+        let url_familiar = '{{url('actualizarRutaAFamiliar')}}';
+        let conductor_id = '{{auth()->user()->id}}'
+
         $(document).ready(function() {
+
             $('#datatable').DataTable({
                 "language": {
                     "url": "{{asset('assets/js/Spanish.json')}}"
                 }
             });
+            map = new google.maps.Map(document.getElementById('map'), {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                zoom: 14,
+                // center: {lat: lat, lng: long}
+            });
+
+            marker = new google.maps.Marker({
+                // position: {lat: lat, lng: long},
+                animation: google.maps.Animation.DROP,
+                map: map
+            });
+
+            navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+
+            window.Echo.channel('rfid')
+                .listen('CapturarRfid', (e) => {
+                    populateTable();
+
+                    console.log(e);
+
+                });
 
             populateTable();
 
         });
+
+        function geo_success(position) {
+            do_something(position.coords.latitude, position.coords.longitude);
+        }
+
+        function geo_error() {
+            alert("Sorry, no position available.");
+        }
+
+        function do_something(lat, long) {
+            marker.setPosition({lat: lat, lng: long});
+            map.panTo({lat: lat, lng: long});
+
+            $.ajax({
+                type: 'GET',
+                url: url_familiar,
+                data:{lat: lat, lng: long, conductor_id:conductor_id},
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (JqXhr) {
+                    console.log(JqXhr);
+                }
+            });
+
+        }
 
         function populateTable() {
             $.ajax({
@@ -229,10 +288,10 @@
                         });
                     },
                     error:function (jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR.responseText);
+                        console.log(jqXHR);
                         swal(
                             'Ha ocurrido un error',
-                            jqXHR.responseText,
+                            jqXHR.responseJSON.message,
                             // errorThrown,
                             'error'
                         );

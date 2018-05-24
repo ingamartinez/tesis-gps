@@ -119,6 +119,10 @@
                 @include('menu.conductor')
                 @endrole
 
+                @role('familiar|super-admin')
+                @include('menu.familiar')
+                @endrole
+
 
                 <div class="clearfix"></div>
             </div>
@@ -207,7 +211,7 @@
 <script src="{{asset('assets/js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap-datepicker.es.min.js')}}"></script>
 
-<script src="{{asset('assets/js/arduino.js')}}"></script>
+
 
 {{--<script src="//maps.googleapis.com/maps/api/js?libraries=drawing%2Cplaces&#038;key=AIzaSyDo0coYsmPFssj1tiYZLIY7yQur-e8aVIs&#038;ver=3">--}}
 {{--</script>--}}
@@ -216,6 +220,8 @@
 </script>
 
 @stack('script')
+
+<script src="{{asset('assets/js/arduino.js')}}"></script>
 
 
 </body>

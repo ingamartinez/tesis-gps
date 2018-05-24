@@ -24,7 +24,7 @@ class RutaConductorController extends Controller
 
     public function estudiantesEnRuta()
     {
-//        $rutas = Ruta::where('conductor_id','=',auth()->user()->id)->get();
+        $rutas = Ruta::where('conductor_id','=',auth()->user()->id)->get();
 
         $estudiantes = DB::table('rutas')
             ->join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
@@ -34,7 +34,6 @@ class RutaConductorController extends Controller
             ->where('rutas.conductor_id','=',auth()->user()->id)
             ->where('registro_rutas.estado','=',1)
         ->get();
-
 
 
         return response()->json($estudiantes,200);
@@ -114,13 +113,29 @@ class RutaConductorController extends Controller
      */
     public function finalizarRuta(Request $request, $id)
     {
-        $registroRuta = RegistroRuta::findOrFail($id);
+        $estudiantes = DB::table('rutas')
+            ->join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
+            ->join('registro_estudiantes AS re',"re.registro_rutas_id",'registro_rutas.id')
+            ->join('users',"re.estudiante_id",'users.id')
+            ->select('rutas.nombre AS ruta','users.id AS users_id','users.name AS users_name','re.estado AS estado_ruta')
+            ->where('rutas.conductor_id','=',auth()->user()->id)
+            ->where('registro_rutas.estado','=',1)
+            ->where('re.estado','=',1)
+        ->get();
 
-        $registroRuta->estado=0;
+        //dd($estudiantes);
 
-        $registroRuta->save();
+        if($estudiantes->isEmpty()){
+            $registroRuta = RegistroRuta::findOrFail($id);
 
-        return response()->json(['message'=>'Ruta Finalizada'],200);
+            $registroRuta->estado=0;
+
+            $registroRuta->save();
+
+            return response()->json(['message'=>'Ruta Finalizada'],200);
+        }else{
+            return response()->json(['message'=>'Aún hay estudiantes'],404);
+        }
 
     }
 

@@ -79,9 +79,22 @@ class User extends Authenticatable implements HasRoleContract
             ->where('rutas.conductor_id','=',$this->id)
             ->where('registro_rutas.estado','=',1)
             ->first();
-
-
         return $nombre_ruta;
+    }
+
+    public function estudianteEnRuta(){
+        $existe = RegistroEstudiante::where('estudiante_id','=',$this->estduiante->id)->where('estado','=',1)->exists();
+
+        return $existe;
+    }
+
+    public function rutaDelEstudiante(){
+        $re=RegistroEstudiante::where('estudiante_id','=',$this->estduiante->id)->where('estado','=',1)->first();
+
+        $rr=Ruta::findOrFail(RegistroRuta::findOrFail($re->registro_rutas_id)->rutas_id);
+
+
+        return $rr;
     }
 
 

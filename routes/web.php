@@ -33,6 +33,16 @@ Route::middleware(['role:conductor|super-admin','auth'])->group(function () {
     ]]);
 });
 
+Route::middleware(['role:familiar|super-admin','auth'])->group(function () {
+
+    Route::resource('familiar','FamiliarController',['names'=>[
+        'store' => 'familiar.store',
+        'show' => 'familiar.show',
+        'update' => 'familiar.update',
+        'delete' => 'familiar.delete'
+    ]]);
+});
+
 Route::middleware(['role:admin|super-admin','auth'])->group(function () {
 
     Route::post('validar-acudiente','AcudienteController@validar')->name('acudiente.validar');
@@ -85,7 +95,7 @@ Route::resource('monitoreo','MonitoreoController');
 Route::get('reporte-zona','ReporteController@reporteZona')->name('reporte.zona');
 Route::resource('reporte','ReporteController');
 
-Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
+Route::get('recibirDatos', function (\Illuminate\Http\Request $request) {
     $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta)->where('estado','=',1)->first();
 	
 	$rfid= \App\Rfid::where('serial','=',$request->tarjeta)->first();
@@ -117,8 +127,32 @@ Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
 	 return "Ok";
 });
 
-Route::get('prueba', function (\Illuminate\Http\Request $request) {
-    $user = \App\User::findOrFail(6);
+Route::get('actualizarRutaAFamiliar', function (\Illuminate\Http\Request $request) {
+    $estudiantes = DB::table('rutas')
+        ->join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
+        ->join('registro_estudiantes AS re',"re.registro_rutas_id",'registro_rutas.id')
+        ->join('users',"re.estudiante_id",'users.id')
+        ->select('rutas.nombre AS ruta','users.id AS users_id','users.name AS users_name','re.estado AS estado_ruta')
+        ->where('rutas.conductor_id','=',$request->conductor_id)
+        ->where('registro_rutas.estado','=',1)
+    ->get();
 
-    dd($user->hasRutaActiva());
+//    dd($estudiantes);
+
+    foreach ($estudiantes as $estudiante){
+        event(new \App\Events\RutaDelBus($estudiante->users_id,$estudiante->estado_ruta,$request->lat,$request->lng));
+    }
+
+
+});
+
+Route::get('prueba', function (\Illuminate\Http\Request $request) {
+    $user = \App\User::findOrFail(9);
+    $estuidiante = \App\RegistroEstudiante::where('estudiante_id','=',8)->where('estado','=',1)->get();
+
+    dd($estuidiante);
+
+    dd($user->estduiante);
+
+    dd($user->estudianteEnRuta(),auth()->user()->estudianteEnRuta());
 });
