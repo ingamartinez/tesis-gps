@@ -17,14 +17,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name" class="control-label">Nombre Completo</label>
-                                <input type="text" class="form-control" id="modal_editar_usuario_name" name="name" placeholder="Ej: Alejandro Martinez" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
+                                <input type="text" class="form-control" id="modal_editar_usuario_name" name="name" placeholder="Ej: Carlos Arenas" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="email" class="control-label">Email</label>
-                                <input type="text" class="form-control" id="modal_editar_usuario_email" name="email" placeholder="Ej: ing.amartinez94@gmail.com" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
+                                <input type="text" class="form-control" id="modal_editar_usuario_email" name="email" placeholder="Ej: ejemplo@gmail.com" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
