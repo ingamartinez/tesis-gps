@@ -34,7 +34,7 @@
                 @if(auth()->user()->estudianteEnRuta())
 
                     <div class="col-xs-12 col-md-8">
-                        <h3>Ruta Activa <b>{{auth()->user()->rutaDelEstudiante()->nombre}}</b></h3>
+                        <h3>Ruta del Estudiante: <b>{{auth()->user()->rutaDelEstudiante()->nombre}}</b></h3>
                         {{--<button type="button" id="finalizar_ruta" value="{{auth()->user()->rutaActiva()->registro_rutas_id}}" class="btn btn-info waves-effect waves-light">Finalizar Ruta</button>--}}
                         <hr>
                         <div class="form-group">
