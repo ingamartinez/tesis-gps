@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ruta;
+use App\User;
 use Illuminate\Http\Request;
 
 class RutaController extends Controller
@@ -29,7 +30,8 @@ class RutaController extends Controller
     public function index()
     {
         $rutas = Ruta::all();
-        return view('admin.gestion_rutas.index',compact('rutas'));
+        $users = User::all();
+        return view('admin.gestion_rutas.index',compact('rutas','users'));
     }
 
     /**

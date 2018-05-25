@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Formulario Agregar Usuario</h4>
+                <h4 class="modal-title">Formulario Agregar Ruta</h4>
             </div>
 
             <form action="{{route('usuario.store')}}" method="POST" autocomplete="off" id="form_agregar_usuario">
@@ -14,15 +14,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name" class="control-label">Nombre Completo</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Ej: Alejandro Martinez" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="email" class="control-label">Email</label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="Ej: ing.amartinez94@gmail.com" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
+                                <label for="name" class="control-label">Nombre Ruta</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Ej: " data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -30,45 +23,29 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="password" class="control-label">Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Ej: 123456" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="password" class="control-label">Confirmar Contraseña</label>
-                                <input type="password" class="form-control" id="password-confirm" placeholder="Ej: 123456" data-match="#password" data-match-error="Las contraseñas no coinciden" required>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="rfid" class="control-label">Rfid</label>
-                                <select id="rfid" name="rfid" class="form-control" data-remote="{{route('usuario.validar')}}" data-remote-method="POST">
-                                    <option value="">Escoge un RFID</option>
-                                    @foreach($rfids->whereNotIn('id',array_pluck($users,'rfid_id')) as $rfid)
-                                        <option value="{{$rfid->id}}" >{{$rfid->serial}}</option>
+                                <label for="conductor" class="control-label">Conductor</label>
+                                <select id="conductor" name="conductor" class="form-control" data-remote="{{route('ruta.validar')}}" data-remote-method="POST" required>
+                                    <option value="">Escoge un Conductor</option>
+                                    @foreach($users as $user)
+                                        @if ($user->hasRole('conductor'))
+                                            <option value="{{$user->id}}" >{{$user->name}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">Escoja un Rol</label>
-                                @foreach($roles as $rol)
-                                    <div class="radio radio-success">
-                                        <input type="radio" name="radio_rol" id="radio_{{$rol->slug}}" value="{{$rol->slug}}" data-remote="{{route('usuario.validar')}}" data-remote-method="POST" required>
-                                        <label for="radio_{{$rol->slug}}">
-                                            {{$rol->name}}
-                                        </label>
-                                    </div>
-                                @endforeach
+                                <label for="acompanante" class="control-label">Acompañante</label>
+                                <select id="acompanante" name="acompanante" class="form-control" data-remote="{{route('ruta.validar')}}" data-remote-method="POST" required>
+                                    <option value="">Escoge un Acompañante</option>
+                                    @foreach($users as $user)
+                                        @if ($user->hasRole('profesor'))
+                                            <option value="{{$user->id}}" >{{$user->name}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -76,7 +53,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-info waves-effect waves-light">Agregar Usuario</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Agregar Ruta</button>
                 </div>
             </form>
         </div>

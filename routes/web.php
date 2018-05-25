@@ -103,7 +103,7 @@ Route::resource('monitoreo','MonitoreoController');
 Route::get('reporte-zona','ReporteController@reporteZona')->name('reporte.zona');
 Route::resource('reporte','ReporteController');
 
-Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
+Route::get('recibirDatos', function (\Illuminate\Http\Request $request) {
     $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta)->where('estado','=',1)->first();
 	
 	$rfid= \App\Rfid::where('serial','=',$request->tarjeta)->first();
@@ -119,8 +119,10 @@ Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
         $regis->registro_rutas_id=$registro_ruta->id;
         $regis->estudiante_id=$estudiante->id;
         $regis->estado=1;
+        $regis->lugar_inicio=$registro_ruta->lugar_fin;
         $regis->save();
     }else{
+        $regis->lugar_fin=$registro_ruta->lugar_fin;
         $regis->toggleState()->save();
     }
 
@@ -136,6 +138,13 @@ Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
 });
 
 Route::get('actualizarRutaAFamiliar', function (\Illuminate\Http\Request $request) {
+    $rr = DB::table('registro_rutas')
+        ->join('rutas',"registro_rutas.rutas_id",'rutas.id')
+        ->select('registro_rutas.id AS registro_ruta_id')
+        ->where('rutas.conductor_id','=',$request->conductor_id)
+        ->where('registro_rutas.estado','=',1)
+    ->first();
+
     $estudiantes = DB::table('rutas')
         ->join('registro_rutas',"registro_rutas.rutas_id",'rutas.id')
         ->join('registro_estudiantes AS re',"re.registro_rutas_id",'registro_rutas.id')
@@ -143,9 +152,13 @@ Route::get('actualizarRutaAFamiliar', function (\Illuminate\Http\Request $reques
         ->select('rutas.nombre AS ruta','users.id AS users_id','users.name AS users_name','re.estado AS estado_ruta')
         ->where('rutas.conductor_id','=',$request->conductor_id)
         ->where('registro_rutas.estado','=',1)
-    ->get();
+        ->get();
 
-//    dd($estudiantes);
+    $re=\App\RegistroRuta::findOrFail($rr->registro_ruta_id);
+    $re->lugar_fin = $request->lat.'|'.$request->lng;
+//
+    $re->save();
+    dd($re);
 
     foreach ($estudiantes as $estudiante){
         event(new \App\Events\RutaDelBus($estudiante->users_id,$estudiante->estado_ruta,$request->lat,$request->lng));

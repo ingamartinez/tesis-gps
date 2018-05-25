@@ -19,7 +19,7 @@
                     </ul>
                 </div>
 
-                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_usuario">Agregar Usuario</button>
+                <button class="btn btn-primary waves-effect waves-light btn-lg m-b-5" data-toggle="modal" data-target="#modal_agregar_usuario">Agregar Ruta</button>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -75,7 +75,7 @@
 @endsection
 
 @section('modals')
-    {{--@include('admin.gestion_rutas.includes.modal_agregar_ruta')--}}
+    @include('admin.gestion_rutas.includes.modal_agregar_ruta')
     {{--@include('admin.gestion_rutas.includes.modal_editar_ruta')--}}
 @endsection
 
