@@ -158,7 +158,7 @@ Route::get('actualizarRutaAFamiliar', function (\Illuminate\Http\Request $reques
     $re->lugar_fin = $request->lat.'|'.$request->lng;
 //
     $re->save();
-    dd($re);
+//    dd($re);
 
     foreach ($estudiantes as $estudiante){
         event(new \App\Events\RutaDelBus($estudiante->users_id,$estudiante->estado_ruta,$request->lat,$request->lng));
