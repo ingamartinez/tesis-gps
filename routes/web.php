@@ -126,7 +126,7 @@ Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
         $regis->toggleState()->save();
     }
 
-    //dd($regis);
+//    dd($regis);
 
     event(new \App\Events\CapturarRfid(
         $registro_ruta->id,

@@ -182,11 +182,13 @@
                 url: '{{url('estudiantes-ruta')}}',
                 success: function (data) {
 
+                    console.log(data);
+
                     var table = $('#estudiantes > tbody');
                     table.empty();
                     _.each(data,function (item) {
 
-                        if (item.estado_ruta) {
+                        if (item.estado_ruta==="1") {
                             item.estado_ruta="En ruta";
 
                             table.append
@@ -195,7 +197,7 @@
                                 "<td>"+item.estado_ruta+"</td>" +
                             "</tr>");
 
-                        }else{
+                        }else if(item.estado_ruta==="0"){
                             item.estado_ruta="Fuera de Ruta";
 
                             table.append
