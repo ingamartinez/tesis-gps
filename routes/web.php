@@ -103,7 +103,7 @@ Route::resource('monitoreo','MonitoreoController');
 Route::get('reporte-zona','ReporteController@reporteZona')->name('reporte.zona');
 Route::resource('reporte','ReporteController');
 
-Route::get('recibirDatos', function (\Illuminate\Http\Request $request) {
+Route::post('recibirDatos', function (\Illuminate\Http\Request $request) {
     $registro_ruta= \App\RegistroRuta::where('rutas_id','=',$request->ruta)->where('estado','=',1)->first();
 	
 	$rfid= \App\Rfid::where('serial','=',$request->tarjeta)->first();
