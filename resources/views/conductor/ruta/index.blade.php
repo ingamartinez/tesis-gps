@@ -188,7 +188,7 @@
                     table.empty();
                     _.each(data,function (item) {
 
-                        if (item.estado_ruta==="1") {
+                        if (item.estado_ruta===1) {
                             item.estado_ruta="En ruta";
 
                             table.append
@@ -197,7 +197,7 @@
                                 "<td>"+item.estado_ruta+"</td>" +
                             "</tr>");
 
-                        }else if(item.estado_ruta==="0"){
+                        }else if(item.estado_ruta===0){
                             item.estado_ruta="Fuera de Ruta";
 
                             table.append
